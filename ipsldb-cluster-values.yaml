@@ -1,0 +1,29 @@
+auth:
+  username: postgres
+  password: post2025
+  replicationUsername: repl_user
+  replicationPassword: rep2025
+
+architecture: replication
+
+primary:
+  extendedConfiguration: |
+    wal_level = replica
+    max_wal_senders = 10
+    wal_keep_size = 64
+    hot_standby = on
+  service:
+    type: LoadBalancer
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+pgHbaConfiguration: |-
+  host replication repl_user 0.0.0.0/0 md5
+  host all all 0.0.0.0/0 
+  
+readReplicas:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
